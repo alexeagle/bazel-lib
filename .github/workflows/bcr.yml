@@ -18,7 +18,7 @@ on:
 env:
   # Fork bazelbuild/bazel-central-registry and put the name of your fork below. Branches
   # will be pushed here and will be PR'ed against bazelbuild/bazel-central-registry
-  BCR_FORK: kormide/bazel-central-registry
+  BCR_FORK: aspect-build/bazel-central-registry
   # To post PRs you must set up a personal access token and store it in a
   # repository secret for this repo. TODO: same workflow for orgs?
   # Do NOT hardcode the token in this file.

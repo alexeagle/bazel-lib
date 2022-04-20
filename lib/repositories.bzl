@@ -16,6 +16,8 @@ def aspect_bazel_lib_dependencies():
             "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.1.1/bazel-skylib-1.1.1.tar.gz",
         ],
     )
+    # KEEP THIS IN SYNC WITH /MODULE.bazel !!
+    # TODO(alex): a test asserting that we keep them in sync
 
 def register_jq_toolchains(version, name = "jq"):
     """Registers jq toolchain and repositories
