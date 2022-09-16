@@ -1,0 +1,21 @@
+on:
+  schedule:
+    # Mondays at 5am UTC / midnight EST
+    - cron: '0 5 * * 1'
+  workflow_dispatch:
+
+jobs:
+  tagger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: tag repo
+        run: |
+          curl -s -X POST https://api.github.com/repos/$GITHUB_REPOSITORY/git/refs \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -d @- << EOF
+          {
+            "ref": "refs/tags/$(date +%Y.%V)",
+            "sha": "$(git rev-parse HEAD)"
+          }
+          EOF
