@@ -1,5 +1,4 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("//lib:utils.bzl", "is_bazel_6_or_greater")
 load("//lib:write_source_files.bzl", "write_source_files")
 
 exports_files([
@@ -12,7 +11,6 @@ write_source_files(
     files = {
         "integrity.bzl": "//tools/release:release_versions",
     },
-    tags = (["manual"] if not is_bazel_6_or_greater() else []),
 )
 
 bzl_library(
