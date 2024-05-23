@@ -40,8 +40,6 @@ RELEASED_BINARY_INTEGRITY = $(
 )
 EOF
 
-cat ${PREFIX}/tools/integrity.bzl
-
 # Append that generated file back into the archive
 tar --file $ARCHIVE_TMP --append ${PREFIX}/tools/integrity.bzl
 
