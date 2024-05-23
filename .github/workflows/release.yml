@@ -33,6 +33,7 @@ jobs:
           mkdir -p ${{ env.DEST }}
           bazel --bazelrc=.github/workflows/ci.bazelrc \
             run --config=release //tools/release:copy_release_artifacts
+
       - uses: actions/upload-artifact@v4
         with:
           name: artifacts

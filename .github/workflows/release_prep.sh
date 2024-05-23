@@ -24,7 +24,7 @@ tar --file $ARCHIVE_TMP --delete ${PREFIX}/tools/integrity.bzl
 
 # Add trailing newlines to sha256 files. They were built with
 # https://github.com/aspect-build/bazel-lib/blob/main/tools/release/hashes.bzl
-for sha in $(ls artifacts-*/*.sha256); do
+for sha in $(ls artifacts/*.sha256); do
   echo "" >>$sha
 done
 
@@ -32,13 +32,29 @@ mkdir -p ${PREFIX}/tools
 cat >${PREFIX}/tools/integrity.bzl <<EOF
 "Generated during release by release_prep.sh, using integrity.jq"
 
-RELEASED_BINARY_INTEGRITY = $(
+COPY_DIRECTORY_INTEGRITY = $(
   jq \
     --from-file .github/workflows/integrity.jq \
     --slurp \
-    --raw-input artifacts-*/*.sha256
+    --raw-input artifacts/copy_directory*.sha256
+)
+
+COPY_TO_DIRECTORY_INTEGRITY = $(
+  jq \
+    --from-file .github/workflows/integrity.jq \
+    --slurp \
+    --raw-input artifacts/copy_to_directory*.sha256
+)
+
+EXPAND_TEMPLATE_INTEGRITY = $(
+  jq \
+    --from-file .github/workflows/integrity.jq \
+    --slurp \
+    --raw-input artifacts/expand_template*.sha256
 )
 EOF
+
+cat ${PREFIX}/tools/integrity.bzl
 
 # Append that generated file back into the archive
 tar --file $ARCHIVE_TMP --append ${PREFIX}/tools/integrity.bzl
