@@ -2,7 +2,6 @@
 """
 
 load("@io_bazel_rules_go//go:def.bzl", "go_binary")
-load("//lib:utils.bzl", "to_label")
 load(":hashes.bzl", "hashes")
 
 PLATFORMS = [
@@ -55,42 +54,42 @@ def multi_platform_go_binaries(name, embed, prefix = "", **kwargs):
         **kwargs
     )
 
-def release(name, targets, **kwargs):
-    """The release macro creates the artifact copier script.
+# def release(name, targets, **kwargs):
+#     """The release macro creates the artifact copier script.
 
-    It's an executable script that copies all artifacts produced by the given
-    targets into the provided destination. See .github/workflows/release.yml.
+#     It's an executable script that copies all artifacts produced by the given
+#     targets into the provided destination. See .github/workflows/release.yml.
 
-    Args:
-        name: the name of the genrule.
-        targets: a list of filegroups passed to the artifact copier.
-        **kwargs: extra arguments.
-    """
+#     Args:
+#         name: the name of the genrule.
+#         targets: a list of filegroups passed to the artifact copier.
+#         **kwargs: extra arguments.
+#     """
 
-    native.genrule(
-        name = "{}_versions".format(name),
-        srcs = targets,
-        outs = ["{}_versions_generated.bzl".format(name)],
-        executable = True,
-        cmd = " && ".join([
-            """echo '"AUTO GENERATED. DO NOT EDIT"\n' >> $@""",
-        ] + [
-            "./$(location :create_versions.sh) {} $(locations {}) >> $@".format(to_label(target).name, target)
-            for target in targets
-        ]),
-        tools = [":create_versions.sh"],
-        visibility = ["//tools:__pkg__"],
-        **kwargs
-    )
+#     native.genrule(
+#         name = "{}_versions".format(name),
+#         srcs = targets,
+#         outs = ["{}_versions_generated.bzl".format(name)],
+#         executable = True,
+#         cmd = " && ".join([
+#             """echo '"AUTO GENERATED. DO NOT EDIT"\n' >> $@""",
+#         ] + [
+#             "./$(location :create_versions.sh) {} $(locations {}) >> $@".format(to_label(target).name, target)
+#             for target in targets
+#         ]),
+#         tools = [":create_versions.sh"],
+#         visibility = ["//tools:__pkg__"],
+#         **kwargs
+#     )
 
-    native.genrule(
-        name = name,
-        srcs = targets,
-        outs = ["release.sh"],
-        executable = True,
-        cmd = "./$(location //tools/release:create_release.sh) {locations} > \"$@\"".format(
-            locations = " ".join(["$(locations {})".format(target) for target in targets]),
-        ),
-        tools = ["//tools/release:create_release.sh"],
-        **kwargs
-    )
+#     native.genrule(
+#         name = name,
+#         srcs = targets,
+#         outs = ["release.sh"],
+#         executable = True,
+#         cmd = "./$(location //tools/release:create_release.sh) {locations} > \"$@\"".format(
+#             locations = " ".join(["$(locations {})".format(target) for target in targets]),
+#         ),
+#         tools = ["//tools/release:create_release.sh"],
+#         **kwargs
+#     )

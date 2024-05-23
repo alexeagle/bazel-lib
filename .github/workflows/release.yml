@@ -14,6 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - uses: bazel-contrib/setup-bazel@0.8.4
+        with:
+          # Avoid downloading Bazel every time.
+          bazelisk-cache: true
+          # Store build cache per workflow.
+          disk-cache: ${{ github.workflow }}
+          # Share repository cache between workflows.
+          repository-cache: true
+
       - name: Build Go Binaries
         env:
           # NB: this variable is read by tools/release/copy_release_artifacts.sh
@@ -22,7 +32,7 @@ jobs:
           rm -rf ${{ env.DEST }}
           mkdir -p ${{ env.DEST }}
           bazel --bazelrc=.github/workflows/ci.bazelrc \
-            run --config=local //tools/release:tools_delivery
+            run --config=release //tools/release:copy_release_artifacts
       - uses: actions/upload-artifact@v4
         with:
           name: artifacts
@@ -30,6 +40,7 @@ jobs:
           retention-days: 1
 
   release:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
